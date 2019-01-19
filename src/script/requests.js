@@ -1,4 +1,8 @@
-[
+import { request } from "https";
+
+let requests;
+
+requests = [
 
     "LOAD CSV WITH HEADERS FROM 'file:///domaine_influence.csv' AS line CREATE (d:Domaine_influence { id:toInteger(line.id), libelle: line.libelle});"
     
@@ -38,3 +42,5 @@
     
 
 ]
+
+module.exports = request;
