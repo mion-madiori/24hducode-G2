@@ -10,7 +10,7 @@ CREATE CONSTRAINT ON (e:Ecole) ASSERT e.id IS UNIQUE;
 
 LOAD CSV WITH HEADERS FROM 'file:///ecole_influence.csv' AS line
 MATCH (d:Domaine_influence {id:toInteger(line.influence_id)}), (e:Ecole {id:toInteger(line.ecole_id)})
-CREATE (e)-[:INFLUENCE]->(d);
+MERGE (e)-[:INFLUENCE]->(d);
 
 LOAD CSV WITH HEADERS FROM 'file:///entreprise.csv' AS line
 CREATE (e:Entreprise { id:toInteger(line.id), nom: line.nom});
@@ -19,7 +19,7 @@ CREATE CONSTRAINT ON (e:Entreprise) ASSERT e.id IS UNIQUE;
 
 LOAD CSV WITH HEADERS FROM 'file:///entreprise_influence.csv' AS line
 MATCH (d:Domaine_influence {id:toInteger(line.influence_id)}), (e:Entreprise {id:toInteger(line.entreprise_id)})
-CREATE (e)-[:influence]->(d);
+MERGE (e)-[:influence]->(d);
 
 LOAD CSV WITH HEADERS FROM 'file:///ville.csv' AS line
 CREATE (ville:Ville { id: toInteger(line.id), nom: line.nom, pays:line.pays });
@@ -33,24 +33,24 @@ CREATE CONSTRAINT ON (p:Personn) ASSERT p.id IS UNIQUE;
 
 LOAD CSV WITH HEADERS FROM 'file:///personne.csv' AS line
 MATCH (person:Personn {id: toInteger(line.id)}),(ville:Ville {id: toInteger(line.ville_id)})
-CREATE (person)-[:habite]->(ville);
+MERGE (person)-[:habite]->(ville);
 
 LOAD CSV WITH HEADERS FROM 'file:///personne_ecole.csv' AS line
 MATCH (p:Personn {id:toInteger(line.personne_id)}), (e:Ecole {id:toInteger(line.ecole_id)})
-CREATE (p)-[:personne_ecole]->(e);
+MERGE (p)-[:personne_ecole]->(e);
 
 LOAD CSV WITH HEADERS FROM 'file:///personne_entreprise.csv' AS line
 MATCH (p:Personn {id:toInteger(line.personne_id)}), (e:Entreprise {id:toInteger(line.entreprise_id)})
-CREATE (p)-[:personne_entreprise]->(e);
+MERGE (p)-[:personne_entreprise]->(e);
 
 LOAD CSV WITH HEADERS FROM 'file:///personne_influence.csv' AS line
 MATCH (p:Personn {id:toInteger(line.personne_id)}), (d:Domaine_influence {id:toInteger(line.influence_id)})
-CREATE (p)-[:influence]->(d);
+MERGE (p)-[:influence]->(d);
 
 LOAD CSV WITH HEADERS FROM 'file:///tbl_amis.csv' AS line
 MATCH (p1:Personn {id:toInteger(line.ami_de_id)}), (p2:Personn {id:toInteger(line.ami_id)})
-CREATE (p1)-[:ami_de]->(p2d);
+MERGE (p1)-[:ami_de]->(p2d);
 
 LOAD CSV WITH HEADERS FROM 'file:///tbl_dossier.csv' AS line
 MATCH (p1:Personn {id:toInteger(line.a_dossier_id)}), (p2:Personn {id:toInteger(line.dossier_id)})
-CREATE (p1)-[:a_dossier_sur]->(p2);
+MERGE (p1)-[:a_dossier_sur]->(p2);
