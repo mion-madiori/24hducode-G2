@@ -1,0 +1,11 @@
+{
+  "name": "24h",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "load-data": "node ./src/script/neo4jLoader.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
