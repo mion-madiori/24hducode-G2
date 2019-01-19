@@ -7,5 +7,9 @@
     "load-data": "node ./src/script/neo4jLoader.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "neo4j-driver": "^1.7.2"
+  }
 }
