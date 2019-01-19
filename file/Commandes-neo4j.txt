@@ -49,7 +49,7 @@ MERGE (p)-[:influence]->(d);
 
 LOAD CSV WITH HEADERS FROM 'file:///tbl_amis.csv' AS line
 MATCH (p1:Personn {id:toInteger(line.ami_de_id)}), (p2:Personn {id:toInteger(line.ami_id)})
-MERGE (p1)-[:ami_de]->(p2d);
+MERGE (p2)-[:ami_de]->(p1);
 
 LOAD CSV WITH HEADERS FROM 'file:///tbl_dossier.csv' AS line
 MATCH (p1:Personn {id:toInteger(line.a_dossier_id)}), (p2:Personn {id:toInteger(line.dossier_id)})
