@@ -13,8 +13,9 @@ Fifche détaillé:
   - +
   
 Personnes avec villes + influence : 
-"MATCH (p:personne)-[:HABITE]->(v:ville)
-WITH p, v, {nom: p.nom, prenom: p.prenom, ville: v.nom} as x
+"MATCH (p:personne)-[:HABITE]->(v:ville),
+(v)-[:VILLE_DANS]->(pa:pays)
+WITH p, v, {nom: p.nom, prenom: p.prenom, ville: v.nom, pays: pa.nom} as x
 RETURN x"
 
 Nœuds entre deux personnes données:
