@@ -3,5 +3,18 @@
 https://24hducode-soprasteria.slack.com/messages/CFB43B4J3/
 
 FONCTIONNALITE
-1 - En tant qu'utilisateur je veux pouvoir selectionner une personne et visualiser les sujet sur lesquels il a de l'influence.
-2 - Créer un system de notation de "méchant" pour permettre de connaitre le boss "méchant".
+
+Fifche détaillé:
+- lien avec personnes direct :
+- lien influence
+  - niveau 0 : 
+  - niveau 1 :
+  - niveau 2 :
+  - +
+  
+Personnes avec villes + influence : 
+"MATCH (p:personne)-[:HABITE]->(v:ville)
+WITH p, v, {nom: p.nom, prenom: p.prenom, ville: v.nom} as x
+RETURN x"
+
+Nœuds entre deux personnes données:
