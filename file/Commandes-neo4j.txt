@@ -29,7 +29,7 @@ CREATE CONSTRAINT ON (v:Ville) ASSERT v.id IS UNIQUE;
 LOAD CSV WITH HEADERS FROM 'file:///personne.csv' AS line
 CREATE (p:Personn { id: toInteger(line.id), nom: line.nom, prenom:line.prenom });
 
-CREATE CONSTRAINT ON (p:Personne) ASSERT p.id IS UNIQUE;
+CREATE CONSTRAINT ON (p:Personn) ASSERT p.id IS UNIQUE;
 
 LOAD CSV WITH HEADERS FROM 'file:///personne.csv' AS line
 MATCH (person:Personn {id: toInteger(line.id)}),(ville:Ville {id: toInteger(line.ville_id)})
