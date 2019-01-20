@@ -141,10 +141,14 @@ function getInfluence(nom, prenom, requests, res){
     let hash = [];
     val.forEach((x)=> {
       x.forEach((y)=>{
-        if (!resultat.includes(y.libelle)) {
-          resultat.push(y.libelle);
+        if (!hash.includes(y.libelle)) {
+          hash.push(y.libelle);
         }
       })
+    })
+
+    has.forEach((val)=>{
+      resultat.push({label: val})
     })
 
     res(resultat)
