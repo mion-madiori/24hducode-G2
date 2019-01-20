@@ -1,0 +1,72 @@
+[
+  {
+    "id": 0,
+    "type": "pays",
+    "label": "France",
+    "group": 1,
+    "cities": [
+      {
+        "id": 10,
+        "type": "city",
+        "label": "Nantes",
+        "persons": [
+          {
+            "id": 11,
+            "type": "personne",
+            "label": "Mcgee Hampton",
+            "persons": [
+              {
+                "id": 13,
+                "type": "personne",
+                "label": "Isaac LE Debile"
+              },
+              {
+                "id": 14,
+                "type": "personne",
+                "label": "Vincent Frite"
+              }
+            ],
+            "links": [
+              {"from" : 11, "to": 13},
+              {"from" : 11, "to": 14}
+            ]
+          },
+          {
+            "id": 12,
+            "type": "personne",
+            "label": "Dickson Neal"
+          }
+        ],
+        "links": [
+          {"from" : 10, "to": 11},
+          {"from" : 10, "to": 12}
+        ]
+      },
+      {
+        "id": 20,
+        "type": "city",
+        "label": "Paris",
+        "persons": [
+          {
+            "id": 21,
+            "type": "personne",
+            "label": "Nico LeMec"
+          },
+          {
+            "id": 22,
+            "type": "personne",
+            "label": "Adrien LeGars"
+          }
+        ],
+        "links": [
+          {"from" : 20, "to": 21},
+          {"from" : 20, "to": 22}
+        ]
+      }
+    ],
+    "links": [
+      {"from" : 0, "to": 10},
+      {"from" : 0, "to": 20}
+    ]
+  }
+]

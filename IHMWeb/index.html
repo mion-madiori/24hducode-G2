@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="vendor/vis/dist/vis.js"></script>
+    <script type="text/javascript" src="vendor/datamaps/datamaps.world.min.js"></script>
+    <!-- amchart lib -->
+    <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
+    <script src="https://www.amcharts.com/lib/3/maps/js/worldLow.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <!-- css -->
+    <link href="vendor/vis/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+    <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/mission_impossible.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+
+      body {
+          color: #d3d3d3;
+          font: 12pt arial;
+          background-color: #222222;
+      }
+
+      .sea{
+        position :absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('assets/img/sea_bg.gif');
+        opacity: 0.03;
+      }
+
+      #worldmap{
+          width: 100%;
+          height: 800px;
+          background-color: #222222;
+      }
+
+      #mynetwork{
+          width: 100%;
+          height: 800px;
+          background-color: #222222;
+      }
+
+      #chartdiv {
+        width: 100%;
+        height: 800px;
+      }
+
+    </style>
+</head>
+<body>
+  <input type="hidden" id="global-current-person-nom" value=""/>
+  <input type="hidden" id="global-current-person-prenom" value=""/>
+  <div class="mi-toolbar">
+    <button class="mi-btn" onclick="back_to_map()">Retour à la carte</button>
+    <h2 id="titre-pays" class="titre-pays">Carte du Monde</h2>
+  </div>
+  <div class="row">
+    <div class="col-8 canvas-col">
+      <div class="sea"></div>
+      <div id="mi-loading-overlay" class="mi-hidden"><img src="assets/img/world-loader.gif"></div>
+      <div id="chartdiv" ></div>
+      <div id="mynetwork" class="mi-hidden"></div>
+    </div>
+    <!-- Colonne de droite -->
+    <div class="col-4 control-col">
+      <div class="mi-header-bar">
+        <div class="mi-header-bar-content">
+          <img src="assets/img/interpol-logo.png">
+          <h1>Interpol</h1>
+        </div>
+        <div class="mi-border-neon"></div>
+      </div>
+      <div class="mi-space"></div>
+      <div class="container-fluid">
+        <div class="mi-panel">
+          <h3>Recherche</h3>
+          <div class="mi-panel-content">
+            <!-- Trigger the modal with a button -->
+            <button type="button" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#myModal">Domaines d'influence</button>
+            <button type="button" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#modal-search2">Rechercher</button>
+          </div>
+        </div>
+        <!-- Card Info -->
+        <div class="mi-space"></div>
+        <div class="row">
+          <!-- Information perso -->
+          <div class="col-6">
+            <div id="mi-card-node" class="mi-card" style="width: 100%;">
+              <div class="mi-card-body">
+                <img class="mi-card-profil mi-hidden" src="assets/profil/profil-01.jpg">
+                <h5 class="mi-card-title" id="person-title">Aucune informations</h5>
+                <!-- Entreprises -->
+                <div class="mi-card-society">
+                  <label>A travaillé à: </label>
+                  <ul id="liste-entreprise">
+                  </ul>
+                </div>
+                <!-- Ecoles -->
+                <div class="mi-card-school">
+                  <label>Est allé à l'école: </label>
+                  <ul id="liste-school">
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Liste complices -->
+          <div class="col-6">
+            <div id="mi-card-complices" class="mi-card" style="width: 100%;">
+              <div class="mi-card-body">
+                <h5 class="mi-card-title">Complices présumés</h5>
+                <ul id="liste-complices">
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</div>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Domaine d'influence</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Niveau</label>
+            <select class="form-control" id="domaine-select">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-primary btn-secondary" onclick="load_domaine_influence()">Afficher</button>
+        </form>
+        <div class="domaine-container">
+          <ul id="liste-domaine">
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FORMULAIRE SEB -->
+<div id="modal-search2" class="modal fade" role="dialog">
+  <div class="modal-dialog mi-modal-full">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Recherche par critères</h4>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="listPays col-sm-2">Pays</label>
+                  <div class="col-sm-10">
+                    <select name="listPays" id="listPays" class="form-control" onchange="sendRequest()">
+                      <option value="">** Choisir un pays **</option>
+                    </select>
+                  </div>
+                </div>
+            </div>
+            <div class="col-sm-4 d-none listToSearch">
+              <div class="form-group row">
+                  <label for="listEntreprise col-sm-2">Entreprise</label>
+                  <div class="col-sm-10">
+                    <select name="listEntreprise" id="listEntreprise" class="form-control" onchange="sendRequest()">
+                      <option value="">** Choisir une entreprise **</option>
+                    </select>
+                  </div>
+                </div>
+            </div>
+            <div class="col-sm-4 d-none listToSearch">
+                <div class="form-group row">
+                    <label for="listEcole col-sm-2">Ecole</label>
+                    <div class="col-sm-10">
+                      <select name="listEcole" id="listEcole" class="form-control" onchange="sendRequest()">
+                        <option value="">** Choisir une ecole **</option>
+                      </select>
+                    </div>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 text-center">
+              <h2>Liste de personnes</h2>
+              <ul id="listResultat" class="list-unstyled">
+                <li>Aucun résultat</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Script map -->
+<script type="text/javascript" src="js/mi-map.js"></script>
+<!-- Script recherche -->
+<script type="text/javascript" src="js/search-script.js"></script>
+<!-- GLobal app script -->
+<!-- App js -->
+<script type="text/javascript" src="js/app.js"></script>
+</body>
+</html>

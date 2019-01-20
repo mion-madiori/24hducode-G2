@@ -1,0 +1,25 @@
+[
+  {
+    "index": 0,
+    "persons": [
+      {
+        "id": 0,
+        "label": "Mcgee Hampton"
+      },
+      {
+        "id": 1,
+        "label": "Dickson Neal"
+      },
+      {
+        "id": 2,
+        "label": "Nelda Morton"
+      }
+    ],
+    "links": [
+      {"from" : 0, "to": 1},
+      {"from" : 1, "to": 2}
+    ],
+    "l": "Hello, Jan Strickland! You have 6 unread messages.",
+    "favoriteFruit": "apple"
+  }
+]

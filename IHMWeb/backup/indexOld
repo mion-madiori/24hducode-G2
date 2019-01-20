@@ -1,0 +1,197 @@
+<html>
+<head>
+    <script type="text/javascript" src="vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="vendor/vis/dist/vis.js"></script>
+    <script type="text/javascript" src="vendor/datamaps/datamaps.world.min.js"></script>
+    <!-- amchart lib -->
+    <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
+    <script src="https://www.amcharts.com/lib/3/maps/js/worldLow.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <!-- css -->
+    <link href="vendor/vis/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+    <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/mission_impossible.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+
+      body {
+          color: #d3d3d3;
+          font: 12pt arial;
+          background-color: #222222;
+      }
+
+      #worldmap{
+          width: 100%;
+          height: 800px;
+          background-color: #222222;
+      }
+
+      #mynetwork{
+          width: 100%;
+          height: 800px;
+          background-color: #222222;
+      }
+
+      #chartdiv {
+        width: 100%;
+        height: 800px;
+      }
+
+    </style>
+</head>
+<body>
+  <div class="mi-toolbar">
+  </div>
+  <div class="row">
+    <div class="col-8 canvas-col">
+      <div id="chartdiv"></div>
+      <div id="mynetwork" class="mi-hidden"></div>
+    </div>
+    <!-- Colonne de droite -->
+    <div class="col-4 control-col">
+      <div class="mi-header-bar">
+        <div class="mi-header-bar-content">
+          <img src="assets/img/interpol-logo.png">
+          <h1>Interpol</h1>
+        </div>
+        <div class="mi-border-neon"></div>
+      </div>
+      <div class="mi-space"></div>
+      <div class="container-fluid">
+        <div class="mi-panel">
+          <h3>Recherche</h3>
+          <div class="mi-panel-content">
+            <form>
+            </form>
+          </div>
+        </div>
+        <!-- Card Info -->
+        <div class="mi-space"></div>
+        <div id="mi-card-node" class="mi-card" style="width: 18rem;">
+          <div class="mi-card-body">
+            <img class="mi-card-profil" src="assets/profil/profil-01.jpg">
+            <h5 class="mi-card-title">Le Blanc</h5>
+            <div class="mi-card-ville"><span>44300 Nantes - Route du dangereux</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!-- Script map -->
+<script type="text/javascript" src="js/mi-map.js"></script>
+<!-- GLobal app script -->
+<script type="text/javascript">
+// AJout un pays
+function add_pays_node(object, nodes, edges){
+
+  object['shape'] = 'box';
+  object['size'] = '30';
+  object['font'] ={ size: 32, color: '#ffffff'};
+
+  nodes.add(object);
+
+  // Si trouve des villes
+  if (object['cities']){
+    var cities = object['cities'];
+    for (i = 0; i < cities.length; i++) {
+      city = cities[i];
+      add_city_node(city, nodes, edges);
+    }
+  }
+
+  // Les liens
+  if (object['links'] != undefined ){
+    var links = object['links'];
+    edges.add(links);
+  }
+}
+
+// Ajoute une ville
+function add_city_node(object, nodes, edges){
+
+  object['shape'] = 'box';
+  object['size'] = '30';
+  object['font'] ={ size: 32, color: '#ffffff'};
+
+  nodes.add(object);
+
+  // Si trouve des persons
+  var persons = object['persons'];
+  var i;
+  for (i = 0; i < persons.length; i++) {
+    person = persons[i];
+    add_person_node(person, nodes, edges);
+  }
+
+  // Les liens
+  if (object['links'] != undefined ){
+    var links = object['links'];
+    edges.add(links);
+  }
+}
+
+// Ajouter une personne
+function add_person_node(object, nodes, edges){
+  // First add self
+  nodes.add(object);
+
+  // Childs
+  if (object['persons'] != undefined ){
+    var persons = object['persons'];
+
+    var i;
+    for (i = 0; i < persons.length; i++) {
+      person = persons[i];
+      add_person_node(person, nodes, edges);
+    }
+  }
+
+  // Les liens
+  if (object['links'] != undefined ){
+    var links = object['links'];
+    edges.add(links);
+  }
+
+}
+
+  $.getJSON("assets/map_person.json", function(json) {
+      // alert(json[1]['persons'][0]['label']); // this will show the info it in firebug console
+
+      // var nodes = new vis.DataSet(persons);
+      var nodes = new vis.DataSet();
+      var edges = new vis.DataSet();
+
+      // Parcours
+      var i = 0;
+      for (i = 0; i < json.length; i++) {
+        object = json[i];
+        // add_person_node(object, nodes, edges);
+        add_pays_node(object, nodes, edges);
+      }
+
+      // create a network
+      var container = document.getElementById('mynetwork');
+
+      // provide the data in the vis format
+      var data = {
+          nodes: nodes,
+          edges: edges
+      };
+
+      var options = {};
+
+      // initialize your network!
+      var network = new vis.Network(container, data, options);
+
+      network.on( 'click', function(properties) {
+        var ids = properties.nodes;
+        var clickedNodes = nodes.get(ids);
+        $("#mi-card-node .mi-card-title").html(clickedNodes[0]['label']);
+        console.log('clicked nodes:', clickedNodes);
+      });
+
+  });
+
+</script>
+</body>
+</html>
