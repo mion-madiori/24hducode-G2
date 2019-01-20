@@ -34,13 +34,10 @@ exports.getInfluences = function(nom, prenom, nb, res) {
 
   if (nb == 0) {
     requests = ['match (p:personne)-[:EST_INFLUENT]->(di:domaine_influence) where p.nom = "' + nom + '" AND p.prenom = "' + prenom + '" return di'
-    ,'match (p:personne)--()-[:EST_INFLUENT]->(di:domaine_influence) where p.nom = "' + nom + '" AND p.prenom = "' + prenom + '" return di'  
-    ,'match (p:personne)--()--()-[:EST_INFLUENT]->(di:domaine_influence) where p.nom = "' + nom + '" AND p.prenom = "' + prenom + '" return di']
+    ,'match (p:personne)-[:A_TRAVAILLE_A | :EST_ALLE_A]-()-[:EST_INFLUENT]->(di:domaine_influence) where p.nom = "' + nom + '" AND p.prenom = "' + prenom + '" return di' ]
   } else {
     requests = ['match (p:personne)-[r:EST_AMI_AVEC*' + nb + '..' + nb + ']-(p1:personne)-[:EST_INFLUENT]->(di:domaine_influence) where p.nom = "' + nom + '" AND p.prenom = "' + prenom + '" return p, di'
-    ,'match (p:personne)--()-[r:EST_AMI_AVEC*' + nb + '..' + nb + ']-(p1:personne)-[:EST_INFLUENT]->(di:domaine_influence) where p.nom = "' + nom + '" AND p.prenom = "' + prenom + '" return p, di',
-    , 'match (p:personne)--()--()-[r:EST_AMI_AVEC*' + nb + '..' + nb + ']-(p1:personne)-[:EST_INFLUENT]->(di:domaine_influence) where p.nom = "' + nom + '" AND p.prenom = "' + prenom + '" return p, di']
-  }
+    ,'match (p:personne)-[:A_TRAVAILLE_A | :EST_ALLE_A]-()-[r:EST_AMI_AVEC*' + nb + '..' + nb + ']-(p1:personne)-[:EST_INFLUENT]->(di:domaine_influence) where p.nom = "' + nom + '" AND p.prenom = "' + prenom + '" return p, di']  }
 
   getInfluence(nom, prenom, requests, res);
 }
