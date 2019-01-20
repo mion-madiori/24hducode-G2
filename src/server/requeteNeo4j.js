@@ -56,11 +56,12 @@ function getInfluence(nom, prenom, requests, res){
       prenom: prenom,
     })
     .then(function (result) {
-      console.log(result)
-      console.log(result.records)
+
+      let ret = []
       result.records.forEach(function (record) {
-        resolve(record.get('di').properties)
+        ret.push(record.get('di').properties)
       });
+      resolve(ret)
     session.close()
     closeConnexion(driver)
     })
@@ -80,11 +81,16 @@ function getInfluence(nom, prenom, requests, res){
   let promise_all = Promise.all(promises);
 
   promise_all.then((val)=> {
-    console.log(val)
     let resultat = []
+    let hash = [];
     val.forEach((x)=> {
-      resultat.push({label: x.libelle})
+      x.forEach((y)=>{
+        if (!resultat.includes(y.libelle)) {
+          resultat.push(y.libelle);
+        }
+      })
     })
+
     res(resultat)
   })
   
