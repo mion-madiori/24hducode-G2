@@ -19,17 +19,24 @@ app.options('/*', function (request, response, next) {
   response.send();
 });
 
-
-// app.get('/', (request, response) => {
-//   response.send('Hello from Express!')
-// })
-
-// app.get('/testGet', (req, res) => {
-//   res.send('ca marche')
-// })
-
 app.get('/getPays', (req, res) => {
   reqneo4j.getPays((result) => {
+    res.json({
+      result
+    })
+  })
+})
+
+app.get('/getEntreprise', (req, res) => {
+  reqneo4j.getEntreprise((result) => {
+    res.json({
+      result
+    })
+  })
+})
+
+app.get('/getEcole', (req, res) => {
+  reqneo4j.getEcole((result) => {
     res.json({
       result
     })
@@ -70,12 +77,23 @@ app.post('/personInterest', (req, res) => {
   const nb = req.body.nb
 
   reqneo4j.getInfluences(nom, prenom, nb, (result) => {
-    console.log(result)
     res.json({
       result
     })
   })
-});
+})
+
+app.post('/getPersonSpe', (req, res) => {
+  const pays = req.body.pays
+  const entreprise = req.body.entreprise
+  const ecole = req.body.ecole
+
+  reqneo4j.getPersonSpe(pays, entreprise, ecole, (result) => {
+    res.json({
+      result
+    })
+  })
+})
 
 app.listen(port, (err) => {
   if (err) {

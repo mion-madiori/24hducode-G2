@@ -51,6 +51,50 @@ exports.getPays = function(res) {
   }); 
 }
 
+exports.getEntreprise = function(res) {
+  let driver = createConnexion()
+  let session = driver.session()
+
+  let request = 'MATCH (n:entreprise) RETURN n'
+
+  session
+  .run(request)
+  .then(function (result) {
+    let resultat = []
+    result.records.forEach(function (record) {
+      resultat.push(record.get('n').properties)
+    });
+  res(resultat)
+  session.close()
+  closeConnexion(driver)
+  })
+  .catch(function (error) {
+    console.log(error)
+  }); 
+}
+
+exports.getEcole = function(res) {
+  let driver = createConnexion()
+  let session = driver.session()
+
+  let request = 'MATCH (n:ecole) RETURN n'
+
+  session
+  .run(request)
+  .then(function (result) {
+    let resultat = []
+    result.records.forEach(function (record) {
+      resultat.push(record.get('n').properties)
+    });
+  res(resultat)
+  session.close()
+  closeConnexion(driver)
+  })
+  .catch(function (error) {
+    console.log(error)
+  }); 
+}
+
 exports.getPersonVille = function(pays, res) {
   let driver = createConnexion()
   let session = driver.session()
@@ -147,7 +191,7 @@ function getInfluence(nom, prenom, requests, res){
       })
     })
 
-    has.forEach((val)=>{
+    hash.forEach((val)=>{
       resultat.push({label: val})
     })
 
@@ -186,4 +230,31 @@ exports.getDetailPersonne = function(nom, prenom, res) {
   }); 
 }
 
+exports.getPersonSpe = function(pays, entreprise, ecole, res) {
+  let driver = createConnexion()
+  let session = driver.session()
 
+  let request = 'Match (p:personne)-[r2:HABITE]->(v:ville)-[r3:VILLE_DANS]->(pa:pays {nom: "' + pays + '"}) '
+  if (entreprise !== '') {
+    request += 'Match (p:personne)-[r1:A_TRAVAILLE_A]->(e:entreprise {nom: "' + entreprise + '"}) '
+  }
+  if (ecole !== '') {
+    request += 'Match (p:personne)-[r4:EST_ALLE_A]->(ec:ecole {nom: "' + ecole + '"}) '
+  }
+  request += 'return p'
+
+  session
+  .run(request)
+  .then(function (result) {
+    let resultat = []
+    result.records.forEach(function (record) {
+      resultat.push(record.get('p').properties)
+    });
+  res(resultat)
+  session.close()
+  closeConnexion(driver)
+  })
+  .catch(function (error) {
+    console.log(error)
+  }); 
+}
