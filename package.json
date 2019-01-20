@@ -4,12 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "load-data": "node ./src/script/neo4jLoader.js"
+    "load-data": "nodemon ./src/server/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
+    "express": "^4.16.4",
     "neo4j-driver": "^1.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
   }
 }
