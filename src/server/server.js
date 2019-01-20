@@ -25,6 +25,19 @@ app.post('/getPersonRank', (req, res) => {
   })
 })
 
+app.post('/personInterest', (req, res) => {
+  const nom = req.body.nom
+  const prenom = req.body.prenom
+  const nb = req.body.nb
+
+  reqneo4j.getInfluences(nom, prenom, nb, (result) => {
+    console.log(result)
+    res.json({
+      result
+    })
+  })
+});
+
 app.listen(port, (err) => {
   if (err) {
     return console.log('something bad happened', err)
